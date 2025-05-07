@@ -1,1 +1,1 @@
-# springboot-jpa-app
+# springboot-jpa-app-study
