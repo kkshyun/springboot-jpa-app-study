@@ -13,17 +13,29 @@ public class Order {
     @Column(name = "order_id")
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="member_id")
     private Member member;
 
-    @OneToMany(mappedBy = "order")
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
     private List<OrderItem> orderItems = new ArrayList<>();
 
-    @OneToOne // FK 를 어디에 두든 상관없음 -> delivery
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL) // FK 를 어디에 두든 상관없음 -> delivery
     @JoinColumn(name = "delivery_id") // 연관관계의 주인
     private Delivery delivery;
     private LocalDateTime orderDate;
     @Enumerated(EnumType.STRING)
     private OrderStatus status;
+
+    //== 연관관계 메서드 ==//
+    public void setMember(Member member) {
+        this.member = member;
+        member.getOrders().add(this);
+    }
+
+    public void setDelivery(Delivery delivery) {
+        this.delivery = delivery;
+        delivery.setOrder(this);
+    }
+
 }
